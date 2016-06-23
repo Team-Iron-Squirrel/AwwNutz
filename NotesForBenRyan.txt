@@ -1,0 +1,3 @@
+made new child collider object for enemy that needs to be created whenever we create enemy
+
+I messed up the animation of the enemy somehow today need to fix soon.
