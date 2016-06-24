@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour {
         //}
 		if (Input.GetAxis("Jump") > 0 && _controller.isGrounded && (running))
         {
-            Debug.Log("Jump");
+            //Debug.Log("Jump");
             velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
             _animator.setAnimation("Jump");
 			Vector3 position = new Vector3 (this.gameObject.transform.position.x, this.gameObject.transform.position.y, this.gameObject.transform.position.z);
@@ -176,6 +176,26 @@ public class PlayerController : MonoBehaviour {
 				acornAmmo += 1;
 				Destroy (col.gameObject);
 			}
+		}
+		if (col.tag == "NonHostile")
+		{
+			if (acornAmmo >= 2) 
+			{
+				acornAmmo -= 2;
+			}
+			else if (acornAmmo == 1)
+			{
+				acornAmmo =0;
+				currentStamina -= stamina / 20;
+			} 
+			else
+			{
+				currentStamina -= stamina / 10;
+			}
+
+			col.gameObject.GetComponent<AnimationController2D>().setFacing("Left");
+			col.gameObject.GetComponent<EnemyController>().chaseSpeed = 100;
+			col.gameObject.GetComponent<EnemyController>().isSatisfied  = true;
 		}
 
     }
