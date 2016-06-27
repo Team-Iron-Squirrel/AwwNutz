@@ -40,7 +40,7 @@ public class EnemyController : MonoBehaviour {
             _animator.setAnimation("Idle");
 		}
         
-        if(_controller.isGrounded & isHostile)
+        if(isHostile)
         {
             //Debug.Log("walking");
             _animator.setAnimation("Walk");

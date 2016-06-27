@@ -70,33 +70,21 @@ public class PlayerController : MonoBehaviour {
 
 
         
-        if(currentStamina<1)
-        {
-            running = false;
+		if (currentStamina < 1) {
+			running = false;
             
-        }
+		}
+		else if (Input.GetKeyDown (KeyCode.LeftArrow))
+		{
+			running = false;
+		}
 
-		else if (Input.GetKeyDown(KeyCode.A))
-        {
-            if(!(running))
-            {
-                running = true;
-                
-            }
-            else if(currentStamina<stamina/4)
-            {
-                running = false;
-               
-            }
-            else
-            {
-                running = false;
-            }
+		else if (Input.GetKeyDown (KeyCode.RightArrow))
+		{
+			running = true;
+		}
 
-        }
-
-
-		if (Input.GetKeyDown (KeyCode.LeftControl)) 
+		if (Input.GetKeyDown (KeyCode.DownArrow)) 
 		{
 			if (acornAmmo > 0) {
 				Vector3 position = new Vector3 (this.gameObject.transform.position.x, this.gameObject.transform.position.y, this.gameObject.transform.position.z);
