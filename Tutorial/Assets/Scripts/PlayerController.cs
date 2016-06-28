@@ -20,10 +20,11 @@ public class PlayerController : MonoBehaviour {
 	public GameObject aiJumper;
 	public GameObject acorn;
 	public GameObject ammoText;
-
+    public GameObject scoreText;
     private CharacterController2D _controller;
     private AnimationController2D _animator;
-
+    private float time;
+    private float score;
     private float currentStamina = 0;
     private bool isDead = false;
     private bool running = true;
@@ -44,7 +45,9 @@ public class PlayerController : MonoBehaviour {
             Vector3 velocity = PlayerInput();
             _controller.move(velocity * Time.deltaTime);
             updateStamina();
-			ammoText.GetComponent<Text>().text = "Ammo: " + acornAmmo.ToString();
+            updateScore();
+            scoreText.GetComponent<Text>().text = "Score: " + score.ToString();
+            ammoText.GetComponent<Text>().text = "Ammo: " + acornAmmo.ToString();
             float normalizedStamina = (float)currentStamina / (float)stamina;
             staminaBar.GetComponent<RectTransform>().sizeDelta = new Vector2(normalizedStamina * 256f, 32f);
         }
@@ -62,7 +65,11 @@ public class PlayerController : MonoBehaviour {
         }
 
     }
-
+    private void updateScore()
+    {
+        time += Time.deltaTime;
+        score = Mathf.Round(time);
+    }
 
     private Vector3 PlayerInput()
     {
