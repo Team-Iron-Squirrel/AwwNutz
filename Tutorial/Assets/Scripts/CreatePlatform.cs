@@ -2,11 +2,9 @@
 using System.Collections;
 
 public class CreatePlatform : MonoBehaviour {
-    public GameObject courseOne;
-    public GameObject courseTwo;
-    public GameObject courseThree;
-    public GameObject courseFour;
-    public GameObject courseFive;
+    public GameObject platformOne;
+    public GameObject platformTwo;
+    public GameObject platformThree;
     public float SpawnTime;
 	public GameObject acorn;
 	public float time;
@@ -16,37 +14,35 @@ public class CreatePlatform : MonoBehaviour {
 	
 	void OnTriggerEnter2D(Collider2D collider)
     {
-		
+        float random = Random.Range(0, 4);
+        Vector3 spawnLoc = new Vector3();
+        spawnLoc.z = 0F;
+        spawnLoc.x = gameObject.transform.position.x + 20;
+        spawnLoc.y = 2.8F;
+		Vector3 spawnAcorn = new Vector3 ();
+		time += 30*Time.deltaTime;
 
-		
-        if (collider.gameObject.CompareTag("Course"))
+		if (time > SpawnTime) {
+			//Debug.Log ("spawn");
+			spawnAcorn = spawnLoc;
+			spawnAcorn.y += 1;
+			Instantiate (acorn, spawnAcorn, Quaternion.Euler (0, 0, 0));
+			time = 0;
+		}
+        if (collider.gameObject.CompareTag("Platform"))
         {
-            float random = Random.Range(1, 5);
-            Vector3 spawnLoc = new Vector3();
-            spawnLoc.z = 0F;
-            spawnLoc.x = gameObject.transform.position.x + 15;
-            spawnLoc.y = 0F;
-            Debug.Log(spawnLoc.x + "Course:  " + random);
-
+			
             if (random == 1)
             {
-                Instantiate(courseOne, spawnLoc, Quaternion.Euler(0, 0, 0));
+                Instantiate(platformOne, spawnLoc, Quaternion.Euler(0, 0, 0));
             }
             else if (random == 2)
             {
-                Instantiate(courseTwo, spawnLoc, Quaternion.Euler(0, 0, 0));
+                Instantiate(platformTwo, spawnLoc, Quaternion.Euler(0, 0, 0));
             }
             else if (random == 3)
             {
-                Instantiate(courseThree, spawnLoc, Quaternion.Euler(0, 0, 0));
-            }
-            else if (random == 4)
-            {
-                Instantiate(courseFour, spawnLoc, Quaternion.Euler(0, 0, 0));
-            }
-            else if (random == 5)
-            {
-                Instantiate(courseFive, spawnLoc, Quaternion.Euler(0, 0, 0));
+                Instantiate(platformThree, spawnLoc, Quaternion.Euler(0, 0, 0));
             }
         }
     }

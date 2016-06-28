@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour {
 	public float enemyDelayTime = 0.6f;
 	private bool isDelayed = false;
     public bool isHostile = false;
+	public bool isSatisfied  = false;
     private CharacterController2D _controller;
     private AnimationController2D _animator;
 	// Use this for initialization
@@ -24,19 +25,24 @@ public class EnemyController : MonoBehaviour {
 	void Update () {
 
         Vector3 velocity = _controller.velocity;
-		if (!(isDelayed) && isHostile) {
+		if (!(isDelayed) && isHostile)
+		{
+			velocity.x = chaseSpeed;
+		}
+		else if (isSatisfied)
+		{
 			velocity.x = chaseSpeed;
 		}
 		else
 		{
 			velocity.x = 0;
-            Debug.Log("Standing");
+            //Debug.Log("Standing");
             _animator.setAnimation("Idle");
 		}
         
-        if(_controller.isGrounded & isHostile)
+        if(isHostile)
         {
-            Debug.Log("walking");
+            //Debug.Log("walking");
             _animator.setAnimation("Walk");
         }
 
@@ -48,7 +54,7 @@ public class EnemyController : MonoBehaviour {
 	{
 
 
-		Debug.Log(col.tag.ToString());
+		//Debug.Log(col.tag.ToString());
 
 		if (col.tag == "aiJump")
 		{
@@ -60,14 +66,22 @@ public class EnemyController : MonoBehaviour {
 			isDelayed = true;
 			Invoke ("ToggleDelay", enemyDelayTime);
 		}
-        if(col.tag == "NonHostile")
+        if(col.tag == "Avoided")
         {
-            col.gameObject.GetComponent<AnimationController2D>().setFacing("Left");
-            col.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
-            col.tag = "Enemy";
-            col.gameObject.GetComponent<EnemyController>().isHostile = true;
-            Debug.Log("This is now an Enemy" + col.tag.ToString());
+			col.transform.parent.gameObject.GetComponent<AnimationController2D>().setFacing("Left");
+			col.transform.parent.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+			Debug.Log (col.transform.parent.gameObject.GetComponent<BoxCollider2D>().tag.ToString ());
+			col.transform.parent.gameObject.GetComponent<BoxCollider2D>().tag = "Enemy";
+			//col.transform.parent.gameObject.GetComponent<BoxCollider2D>().size = new Vector2(0.82f, 1.08f);
+			//col.transform.parent.gameObject.GetComponent<BoxCollider2D>().offset = new Vector2(-0.1f, -0.5f);
+			col.transform.parent.gameObject.GetComponent<EnemyController>().isHostile = true;
+			Debug.Log("This is now an Enemy" + col.transform.parent.gameObject.GetComponent<BoxCollider2D>().tag.ToString ());
+			//Debug.Log ("colider size = " + col.gameObject.GetComponent<BoxCollider2D>().size.ToString());
         }
+		if (col.tag == "KillZ")
+		{
+			Destroy (gameObject);
+		}
 	}
 
 	void ToggleDelay()

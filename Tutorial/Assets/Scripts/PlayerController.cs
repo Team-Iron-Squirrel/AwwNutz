@@ -14,15 +14,13 @@ public class PlayerController : MonoBehaviour {
     public float staminaUpSpeed = 50;
 	public float acornAmmo;
 	public float maxAmmo;
-    public float score = 0;
-    public float time = 0;
     public GameObject gameCamera;
     public GameObject gameOverPanel;
     public GameObject staminaBar;
 	public GameObject aiJumper;
 	public GameObject acorn;
 	public GameObject ammoText;
-    public GameObject scoreText;
+
     private CharacterController2D _controller;
     private AnimationController2D _animator;
 
@@ -46,9 +44,7 @@ public class PlayerController : MonoBehaviour {
             Vector3 velocity = PlayerInput();
             _controller.move(velocity * Time.deltaTime);
             updateStamina();
-            updateScore();
 			ammoText.GetComponent<Text>().text = "Ammo: " + acornAmmo.ToString();
-            scoreText.GetComponent<Text>().text = "Score: " + score.ToString();
             float normalizedStamina = (float)currentStamina / (float)stamina;
             staminaBar.GetComponent<RectTransform>().sizeDelta = new Vector2(normalizedStamina * 256f, 32f);
         }
@@ -66,11 +62,7 @@ public class PlayerController : MonoBehaviour {
         }
 
     }
-    private void updateScore()
-    {
-        time += Time.deltaTime;
-        score = Mathf.Round(time);
-    }
+
 
     private Vector3 PlayerInput()
     {
@@ -78,33 +70,21 @@ public class PlayerController : MonoBehaviour {
 
 
         
-        if(currentStamina<1)
-        {
-            running = false;
+		if (currentStamina < 1) {
+			running = false;
             
-        }
+		}
+		else if (Input.GetKeyDown (KeyCode.LeftArrow))
+		{
+			running = false;
+		}
 
-		else if (Input.GetKeyDown(KeyCode.A))
-        {
-            if(!(running))
-            {
-                running = true;
-                
-            }
-            else if(currentStamina<stamina/4)
-            {
-                running = false;
-               
-            }
-            else
-            {
-                running = false;
-            }
+		else if (Input.GetKeyDown (KeyCode.RightArrow))
+		{
+			running = true;
+		}
 
-        }
-
-
-		if (Input.GetKeyDown (KeyCode.LeftControl)) 
+		if (Input.GetKeyDown (KeyCode.DownArrow)) 
 		{
 			if (acornAmmo > 0) {
 				Vector3 position = new Vector3 (this.gameObject.transform.position.x, this.gameObject.transform.position.y, this.gameObject.transform.position.z);
@@ -151,7 +131,7 @@ public class PlayerController : MonoBehaviour {
         //}
 		if (Input.GetAxis("Jump") > 0 && _controller.isGrounded && (running))
         {
-            Debug.Log("Jump");
+            //Debug.Log("Jump");
             velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
             _animator.setAnimation("Jump");
 			Vector3 position = new Vector3 (this.gameObject.transform.position.x, this.gameObject.transform.position.y, this.gameObject.transform.position.z);
@@ -184,6 +164,26 @@ public class PlayerController : MonoBehaviour {
 				acornAmmo += 1;
 				Destroy (col.gameObject);
 			}
+		}
+		if (col.tag == "NonHostile")
+		{
+			if (acornAmmo >= 2) 
+			{
+				acornAmmo -= 2;
+			}
+			else if (acornAmmo == 1)
+			{
+				acornAmmo =0;
+				currentStamina -= stamina / 20;
+			} 
+			else
+			{
+				currentStamina -= stamina / 10;
+			}
+
+			col.gameObject.GetComponent<AnimationController2D>().setFacing("Left");
+			col.gameObject.GetComponent<EnemyController>().chaseSpeed = 100;
+			col.gameObject.GetComponent<EnemyController>().isSatisfied  = true;
 		}
 
     }
