@@ -156,7 +156,17 @@ public class PlayerController : MonoBehaviour {
 
 
 		//Debug.Log(col.tag.ToString());
-
+		if (col.tag == "Avoided")
+		{
+			col.transform.parent.gameObject.GetComponent<AnimationController2D>().setFacing("Left");
+			col.transform.parent.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+			Debug.Log (col.transform.parent.gameObject.GetComponent<BoxCollider2D>().tag.ToString ());
+			col.transform.parent.gameObject.GetComponent<BoxCollider2D>().tag = "Enemy";
+			col.transform.parent.gameObject.GetComponent<EnemyController>().isHostile = true;
+			Debug.Log("This is now an Enemy" + col.transform.parent.gameObject.GetComponent<BoxCollider2D>().tag.ToString ());
+			col.transform.parent.gameObject.GetComponent<EnemyController> ().isDelayed = true;
+			col.transform.parent.gameObject.GetComponent<EnemyController> ().Invoke ("ToggleDelay", 0.5F);
+		}
         if (col.tag == "KillZ")
         {
             PlayerFallDeath();
