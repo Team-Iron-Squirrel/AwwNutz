@@ -3,7 +3,7 @@ using Prime31;
 using System.Collections;
 
 public class EnemyController : MonoBehaviour {
-
+    public GameObject hero;
     public float chaseSpeed = 5;
     public float gravity = -35;
     public float jumpHeight = 2;
@@ -27,7 +27,14 @@ public class EnemyController : MonoBehaviour {
         Vector3 velocity = _controller.velocity;
 		if (!(isDelayed) && isHostile)
 		{
-			velocity.x = chaseSpeed;
+            if (hero.transform.position.x > transform.position.x)
+            {
+                velocity.x = chaseSpeed;
+            }
+            else
+            {
+                velocity.x = -chaseSpeed;
+            }
 		}
 		else if (isSatisfied)
 		{

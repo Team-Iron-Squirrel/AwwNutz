@@ -5,6 +5,19 @@ public class PlatformRemover : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D collider)
     {
-        Destroy(collider.gameObject);
+        if (collider.gameObject.layer == 10)
+        {
+            Debug.Log("layer");
+            if (collider.tag == "aiJump")
+            {
+                Debug.Log("aijump");
+
+                Destroy(collider.gameObject);
+            }
+                
+        }
+        else {
+            Destroy(collider.gameObject);
+        }
     }
 }

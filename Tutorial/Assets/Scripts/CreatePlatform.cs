@@ -24,7 +24,7 @@ public class CreatePlatform : MonoBehaviour {
             time += 50 * Time.deltaTime;
             if (time > SpawnTime)
             {
-                Debug.Log("Spawn");
+            
                 enemySpawn.y = 1F;
                 enemySpawn.z = 0F;
                 enemySpawn.x = gameObject.transform.position.x + 20;
@@ -36,7 +36,7 @@ public class CreatePlatform : MonoBehaviour {
             spawnLoc.z = 0F;
             spawnLoc.x = gameObject.transform.position.x + 15;
             spawnLoc.y = 0F;
-            Debug.Log(spawnLoc.x + "Course:  " + random);
+
 
             if (random == 1)
             {
