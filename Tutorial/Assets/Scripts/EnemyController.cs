@@ -4,6 +4,7 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour {
     public GameObject hero;
+	public float Hoard;
     public float chaseSpeed = 5;
     public float gravity = -35;
     public float jumpHeight = 2;
@@ -11,6 +12,7 @@ public class EnemyController : MonoBehaviour {
 	public bool isDelayed = false;
     public bool isHostile = false;
 	public bool isSatisfied  = false;
+	public bool ahead = false;
     private CharacterController2D _controller;
     private AnimationController2D _animator;
 	// Use this for initialization
@@ -27,13 +29,24 @@ public class EnemyController : MonoBehaviour {
         Vector3 velocity = _controller.velocity;
 		if (!(isDelayed) && isHostile)
 		{
-            if (hero.transform.position.x > transform.position.x)
-            {
-                velocity.x = chaseSpeed;
-            }
-            else
+			
+			if (hero.transform.position.x + 15 < transform.position.x) 
+			{
+				ahead = true;
+				Debug.Log (ahead);
+			}
+			if (hero.transform.position.x - 15 < transform.position.x) 
+			{
+				ahead = false;
+			}
+
+			if (ahead)
             {
                 velocity.x = -chaseSpeed;
+            }
+			else
+            {
+                velocity.x = chaseSpeed;
             }
 		}
 		else if (isSatisfied)

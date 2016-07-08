@@ -11,5 +11,11 @@ public class platformSpawner : MonoBehaviour {
             posCollider.x += 64;
             collider.transform.position = posCollider;
         }
+		if (collider.gameObject.CompareTag("Background"))
+		{
+			Vector3 posCollider = collider.transform.position;
+			posCollider.x += 180;
+			collider.transform.position = posCollider;
+		}
     }
 }
