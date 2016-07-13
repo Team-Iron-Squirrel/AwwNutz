@@ -43,8 +43,10 @@ public class CameraFollow2D : MonoBehaviour
         {
             m_LookAheadPos = Vector3.MoveTowards(m_LookAheadPos, Vector3.zero, Time.deltaTime*lookAheadReturnSpeed);
         }
+		Vector3 targetOffset = new Vector3(currentTarget.position.x, currentTarget.position.y, currentTarget.position.z);
+		targetOffset.y += 1;
+		Vector3 aheadTargetPos = targetOffset + m_LookAheadPos + Vector3.forward*m_OffsetZ;
 
-		Vector3 aheadTargetPos = currentTarget.position + m_LookAheadPos + Vector3.forward*m_OffsetZ;
         Vector3 newPos = Vector3.SmoothDamp(transform.position, aheadTargetPos, ref m_CurrentVelocity, damping);
 
         transform.position = newPos;
