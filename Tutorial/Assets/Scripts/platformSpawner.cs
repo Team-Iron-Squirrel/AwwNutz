@@ -8,7 +8,7 @@ public class platformSpawner : MonoBehaviour {
         if (collider.gameObject.CompareTag("Platform"))
         {
             Vector3 posCollider = collider.transform.position;
-            posCollider.x += 64;
+            posCollider.x += 128;
             collider.transform.position = posCollider;
         }
 		if (collider.gameObject.CompareTag("Background"))
