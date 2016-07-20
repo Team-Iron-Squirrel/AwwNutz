@@ -24,12 +24,21 @@ public class GameManager : MonoBehaviour {
     }
     public void Play()
     {
-        Application.LoadLevel(1);
+        Application.LoadLevel(2);
     }
-	public void Tutorial()
+	public void StoryNext()
 	{
-		Application.LoadLevel (2);
+		Application.LoadLevel (3);
 	}
+	public void ControlsNext()
+	{
+		Application.LoadLevel (4);
+	}
+	public void WarningPlay()
+	{
+		Application.LoadLevel (1);
+	}
+
     public void ExitGame()
     {
         Application.Quit();

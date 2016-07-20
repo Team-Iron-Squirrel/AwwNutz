@@ -2,7 +2,7 @@
 using System.Collections;
 using Prime31;
 using UnityEngine.UI;
-
+using System.Collections.Generic;
 public class PlayerController : MonoBehaviour {
 
     public float runSpeed = 3;
@@ -28,7 +28,9 @@ public class PlayerController : MonoBehaviour {
     private float currentStamina = 0;
     private bool isDead = false;
     private bool running = true;
-
+	private List <GameObject> enemies = new List<GameObject> ();
+	public float enemySpeed;
+	public float speedModifer;
 	// Use this for initialization
 	void Start () {
         _controller = gameObject.GetComponent<CharacterController2D>();
@@ -166,6 +168,14 @@ public class PlayerController : MonoBehaviour {
 			
 			col.transform.parent.gameObject.GetComponent<EnemyController> ().isDelayed = true;
 			col.transform.parent.gameObject.GetComponent<EnemyController> ().Invoke ("ToggleDelay", 0.5F);
+			enemies.Add (col.transform.parent.gameObject);
+			enemySpeed += speedModifer;
+			foreach (GameObject enemy in enemies) 
+			{
+				if (enemy != null) {
+					enemy.GetComponent<EnemyController> ().chaseSpeed = enemySpeed;
+				}
+			}
 		}
         if (col.tag == "KillZ")
         {
@@ -182,11 +192,21 @@ public class PlayerController : MonoBehaviour {
 				Destroy (col.gameObject);
 			}
 		}
+		if (col.tag == "acornStam") 
+		{
+			
+			currentStamina += stamina / 2;
+			Destroy (col.gameObject);
+			if (currentStamina > stamina) 
+			{
+				currentStamina = stamina;	
+			}
+		}
 		if (col.tag == "NonHostile")
 		{
 			if (acornAmmo >= 2) 
 			{
-				acornAmmo -= 2;
+				acornAmmo -= 1;
 			}
 			else if (acornAmmo == 1)
 			{
