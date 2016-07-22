@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour {
 	private List <GameObject> enemies = new List<GameObject> ();
 	public float enemySpeed;
 	public float speedModifer;
+	public GameObject Enemy;
 	// Use this for initialization
 	void Start () {
         _controller = gameObject.GetComponent<CharacterController2D>();
@@ -181,6 +182,28 @@ public class PlayerController : MonoBehaviour {
         {
             PlayerFallDeath();
         }
+		if (col.tag == "firstEnemy")
+		{
+			Debug.Log("hit");
+			Vector3 enemySpawn = new Vector3();
+			enemySpawn.y = 1F;
+			enemySpawn.z = 0F;
+			enemySpawn.x = gameObject.transform.position.x - 7;
+			enemies.Add((GameObject)(Instantiate(Enemy, enemySpawn , Quaternion.Euler(0, 0, 0))));
+			enemies [enemies.Count - 1].GetComponent<AnimationController2D> ().setFacing("Left");
+			enemies [enemies.Count - 1].GetComponent<SpriteRenderer> ().color = Color.white;
+			enemies [enemies.Count - 1].GetComponent<EnemyController> ().hero = this.gameObject;
+			enemies [enemies.Count - 1].GetComponent<BoxCollider2D> ().tag = "Enemy";
+			enemies [enemies.Count - 1].GetComponent<EnemyController> ().isHostile = true;
+			enemySpeed += speedModifer;
+			foreach (GameObject enemy in enemies) 
+			{
+				if (enemy != null) {
+					enemy.GetComponent<EnemyController> ().chaseSpeed = enemySpeed;
+				}
+			}
+
+		}
         if (col.tag == "Enemy")
         {
             PlayerDeath();
@@ -206,16 +229,12 @@ public class PlayerController : MonoBehaviour {
 		{
 			if (acornAmmo >= 2) 
 			{
-				acornAmmo -= 1;
+				acornAmmo = 0;
 			}
-			else if (acornAmmo == 1)
-			{
-				acornAmmo =0;
-				currentStamina -= stamina / 20;
-			} 
+
 			else
 			{
-				currentStamina -= stamina / 10;
+				PlayerDeath ();
 			}
 
 			col.gameObject.GetComponent<AnimationController2D>().setFacing("Left");
