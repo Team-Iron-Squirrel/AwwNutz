@@ -3,6 +3,8 @@ using System.Collections;
 using Prime31;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
+
 public class PlayerController : MonoBehaviour {
 
     public float runSpeed = 3;
@@ -28,15 +30,30 @@ public class PlayerController : MonoBehaviour {
     private float currentStamina = 0;
     private bool isDead = false;
     private bool running = true;
+    private int delay = 2;
+    private int exhaustedDelay = 0;
 	private List <GameObject> enemies = new List<GameObject> ();
 	public float enemySpeed;
 	public float speedModifer;
 	public GameObject Enemy;
-	// Use this for initialization
-	void Start () {
+    public AudioSource jumpSound;
+    public AudioSource acornToss;
+    public AudioSource exhausted;
+    public AudioSource grabAcorn;
+    public AudioSource death;
+        
+    // Use this for initialization
+    void Start () {
         _controller = gameObject.GetComponent<CharacterController2D>();
         //Debug.Log(_controller.name);
         _animator = gameObject.GetComponent<AnimationController2D>();
+        var soundList = GetComponents<AudioSource>();
+        
+         jumpSound = soundList[0];
+         acornToss = soundList[1];
+         exhausted = soundList[2];
+         grabAcorn = soundList[3];
+        death = soundList[4];
         gameCamera.GetComponent<CameraFollow2D>().startCameraFollow(this.gameObject);
         currentStamina = stamina;
 	}
@@ -45,14 +62,20 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         if (!(isDead))
         {
+           
             Vector3 velocity = PlayerInput();
             _controller.move(velocity * Time.deltaTime);
             updateStamina();
+            if (currentStamina < stamina /10 && !exhausted.isPlaying) 
+            {
+                exhausted.Play();
+            }
             updateScore();
             scoreText.GetComponent<Text>().text = "Score: " + score.ToString();
             ammoText.GetComponent<Text>().text = "Ammo: " + acornAmmo.ToString();
             float normalizedStamina = (float)currentStamina / (float)stamina;
             staminaBar.GetComponent<RectTransform>().sizeDelta = new Vector2(normalizedStamina * 256f, 32f);
+
         }
     }
 
@@ -62,7 +85,7 @@ public class PlayerController : MonoBehaviour {
         {
             currentStamina = currentStamina - staminaDownSpeed * Time.deltaTime;
         }
-        else if(currentStamina < stamina)
+        else if(currentStamina < stamina && _controller.isGrounded)
         {
             currentStamina = currentStamina + staminaUpSpeed * Time.deltaTime;
         }
@@ -99,7 +122,8 @@ public class PlayerController : MonoBehaviour {
 			if (acornAmmo > 0) {
 				Vector3 position = new Vector3 (this.gameObject.transform.position.x, this.gameObject.transform.position.y, this.gameObject.transform.position.z);
 				Instantiate (acorn, position, Quaternion.identity);
-				acornAmmo--;
+                acornToss.Play();
+                acornAmmo--;
 			}
 		}
 
@@ -142,10 +166,12 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetAxis("Jump") > 0 && _controller.isGrounded && (running))
         {
             //Debug.Log("Jump");
+            jumpSound.Play();
             velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
             _animator.setAnimation("Jump");
 			Vector3 position = new Vector3 (this.gameObject.transform.position.x, this.gameObject.transform.position.y, this.gameObject.transform.position.z);
 			Instantiate (aiJumper, position , Quaternion.identity);
+      
 
         }
         //velocity.x *= .096f;
@@ -154,6 +180,8 @@ public class PlayerController : MonoBehaviour {
 
         return velocity;
     }
+
+
     void OnTriggerEnter2D(Collider2D col)
     {
 
@@ -212,14 +240,17 @@ public class PlayerController : MonoBehaviour {
 		{
 			if (acornAmmo <= maxAmmo) {
 				acornAmmo += 1;
-				Destroy (col.gameObject);
+				
 			}
+            grabAcorn.Play();
+            Destroy (col.gameObject);
 		}
 		if (col.tag == "acornStam") 
 		{
 			
 			currentStamina += stamina / 2;
 			Destroy (col.gameObject);
+            grabAcorn.Play();
 			if (currentStamina > stamina) 
 			{
 				currentStamina = stamina;	
@@ -248,6 +279,10 @@ public class PlayerController : MonoBehaviour {
     {
         isDead = true;
         _animator.setAnimation("Death");
+        if (!death.isPlaying)
+        {
+            death.Play();
+        }
         gameOverPanel.SetActive(true);
     }
 
