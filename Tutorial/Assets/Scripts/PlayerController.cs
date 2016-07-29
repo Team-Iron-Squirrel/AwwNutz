@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject acorn;
 	public GameObject ammoText;
     public GameObject scoreText;
+	public GameObject pauseScreen;
     private CharacterController2D _controller;
     private AnimationController2D _animator;
     private float time;
@@ -311,4 +312,18 @@ public class PlayerController : MonoBehaviour {
         gameOverPanel.SetActive(true);
 
     }
+	public void PauseScreenClicked()
+	{
+		if (pauseScreen.activeSelf) {
+			pauseScreen.SetActive (false);
+			Time.timeScale = 1;
+		} 
+		else
+		{
+			pauseScreen.SetActive (true);
+			Time.timeScale = 0.1f;
+		}
+
+	}
+
 }
