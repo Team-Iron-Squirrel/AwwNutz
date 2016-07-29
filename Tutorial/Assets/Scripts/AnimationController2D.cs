@@ -7,9 +7,18 @@ public class AnimationController2D : MonoBehaviour {
 	private string _currentDirection = "Right";
 	private string _currentAnimation;
 	private Animator _animator;
+	private Animator[] obj;
 
 	void Awake () {
-		_animator = this.GetComponent<Animator>();
+		if (this.GetComponent<Animator> () != null)
+		{
+			_animator = this.GetComponent<Animator> ();
+		}
+		else 
+		{
+			obj = GetComponentsInChildren<Animator> (true);
+			_animator = obj [0];
+		}
 	}
 
 	public string getFacing (){ return _currentDirection; }

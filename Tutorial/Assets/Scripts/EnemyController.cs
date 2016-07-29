@@ -15,6 +15,8 @@ public class EnemyController : MonoBehaviour {
 	public bool ahead = false;
     private CharacterController2D _controller;
     private AnimationController2D _animator;
+	public bool playerDead = false;
+	private GameObject obj;
 	// Use this for initialization
 	void Start () {
         _controller = gameObject.GetComponent<CharacterController2D>();
@@ -57,15 +59,32 @@ public class EnemyController : MonoBehaviour {
 		{
 			velocity.x = 0;
             //Debug.Log("Standing");
-            _animator.setAnimation("Idle");
+			if (isHostile == false)
+			{
+				_animator.setAnimation ("Idle");
+			}
+			else
+			{
+				_animator.setAnimation ("dropping");
+			}
 		}
         
-        if(isHostile)
+		if(isHostile && isDelayed == false && playerDead == false)
         {
             //Debug.Log("walking");
-            _animator.setAnimation("Walk");
+            _animator.setAnimation("Run");
         }
+		else if (playerDead && isDelayed == false)
+		{
+			Debug.Log("shouldBeDancing");
+			velocity.x = 0;
+			obj = transform.GetChild(0).gameObject;
+			var rotationVector = obj.transform.rotation.eulerAngles;
+			rotationVector.y = 180;
+			obj.transform.rotation = Quaternion.Euler (rotationVector);
+			_animator.setAnimation ("GangnamStyle");
 
+		}
         velocity.y += gravity * Time.deltaTime;
         _controller.move(velocity * Time.deltaTime);
     }
@@ -79,6 +98,7 @@ public class EnemyController : MonoBehaviour {
 		if (col.tag == "aiJump")
 		{
 			_controller.velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
+			_animator.setAnimation ("Jump");
             
         }
 		if (col.tag == "acornDrop")

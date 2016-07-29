@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour {
 		if (col.tag == "Avoided")
 		{
 			col.transform.parent.gameObject.GetComponent<AnimationController2D>().setFacing("Left");
-			col.transform.parent.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+			//col.transform.parent.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
             col.transform.parent.gameObject.GetComponent<EnemyController>().hero = this.gameObject;
 			col.transform.parent.gameObject.GetComponent<BoxCollider2D>().tag = "Enemy";
 			col.transform.parent.gameObject.GetComponent<EnemyController>().isHostile = true;
@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour {
 			enemySpawn.x = gameObject.transform.position.x - 7;
 			enemies.Add((GameObject)(Instantiate(Enemy, enemySpawn , Quaternion.Euler(0, 0, 0))));
 			enemies [enemies.Count - 1].GetComponent<AnimationController2D> ().setFacing("Left");
-			enemies [enemies.Count - 1].GetComponent<SpriteRenderer> ().color = Color.white;
+			//enemies [enemies.Count - 1].GetComponent<SpriteRenderer> ().color = Color.white;
 			enemies [enemies.Count - 1].GetComponent<EnemyController> ().hero = this.gameObject;
 			enemies [enemies.Count - 1].GetComponent<BoxCollider2D> ().tag = "Enemy";
 			enemies [enemies.Count - 1].GetComponent<EnemyController> ().isHostile = true;
@@ -234,7 +234,13 @@ public class PlayerController : MonoBehaviour {
 		}
         if (col.tag == "Enemy")
         {
-            PlayerDeath();
+			if (!(isDead)) {
+				PlayerDeath ();
+			}
+			//else
+			//{
+			//	col.gameObject.GetComponent<EnemyController>().playerDead = true;
+			//}
         }
 		if (col.tag == "acorn") 
 		{
@@ -277,6 +283,16 @@ public class PlayerController : MonoBehaviour {
 
     private void PlayerDeath()
     {
+
+		foreach (GameObject enemy in enemies) 
+		{
+			if (enemy != null) 
+			{
+				Debug.Log ("dead");
+				enemy.GetComponent<EnemyController> ().playerDead = true;
+				enemy.GetComponent<AnimationController2D> ().setAnimation ("GangnamStyle");
+			}
+		}
         isDead = true;
         _animator.setAnimation("Death");
         if (!death.isPlaying)
