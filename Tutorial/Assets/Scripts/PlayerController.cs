@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour {
     public float staminaUpSpeed = 50;
 	public float acornAmmo;
 	public float maxAmmo;
+	public float superTime = 2;
     public GameObject gameCamera;
     public GameObject gameOverPanel;
     public GameObject staminaBar;
@@ -42,6 +43,8 @@ public class PlayerController : MonoBehaviour {
     public AudioSource exhausted;
     public AudioSource grabAcorn;
     public AudioSource death;
+    public AudioSource StartChase;
+    public AudioSource StealAcorn;
         
     // Use this for initialization
     void Start () {
@@ -50,11 +53,13 @@ public class PlayerController : MonoBehaviour {
         _animator = gameObject.GetComponent<AnimationController2D>();
         var soundList = GetComponents<AudioSource>();
         
-         jumpSound = soundList[0];
-         acornToss = soundList[1];
-         exhausted = soundList[2];
-         grabAcorn = soundList[3];
+        jumpSound = soundList[0];
+        acornToss = soundList[1];
+        exhausted = soundList[2];
+        grabAcorn = soundList[3];
         death = soundList[4];
+        StartChase = soundList[5];
+        StealAcorn = soundList[6];
         gameCamera.GetComponent<CameraFollow2D>().startCameraFollow(this.gameObject);
         currentStamina = stamina;
 	}
@@ -190,6 +195,7 @@ public class PlayerController : MonoBehaviour {
 		//Debug.Log(col.tag.ToString());
 		if (col.tag == "Avoided")
 		{
+            StartChase.Play();
 			col.transform.parent.gameObject.GetComponent<AnimationController2D>().setFacing("Left");
 			//col.transform.parent.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
             col.transform.parent.gameObject.GetComponent<EnemyController>().hero = this.gameObject;
@@ -263,6 +269,14 @@ public class PlayerController : MonoBehaviour {
 				currentStamina = stamina;	
 			}
 		}
+		if (col.tag == "superSquirrel") 
+		{
+			currentStamina = stamina;
+			Destroy (col.gameObject);
+			runSpeed = runSpeed * 1.4f;
+			Invoke ("ToggleSuper", superTime);
+
+		}
 		if (col.tag == "NonHostile")
 		{
 			if (acornAmmo >= 2) 
@@ -274,7 +288,7 @@ public class PlayerController : MonoBehaviour {
 			{
 				PlayerDeath ();
 			}
-
+            StealAcorn.Play();
 			col.gameObject.GetComponent<AnimationController2D>().setFacing("Left");
 			col.gameObject.GetComponent<EnemyController>().chaseSpeed = 100;
 			col.gameObject.GetComponent<EnemyController>().isSatisfied  = true;
@@ -324,6 +338,10 @@ public class PlayerController : MonoBehaviour {
 			Time.timeScale = 0.1f;
 		}
 
+	}
+	public void ToggleSuper()
+	{
+		runSpeed = runSpeed / 1.4f;
 	}
 
 }

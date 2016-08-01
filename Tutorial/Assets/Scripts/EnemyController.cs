@@ -17,11 +17,13 @@ public class EnemyController : MonoBehaviour {
     private AnimationController2D _animator;
 	public bool playerDead = false;
 	private GameObject obj;
+    public AudioSource eatAcorn;
 	// Use this for initialization
 	void Start () {
         _controller = gameObject.GetComponent<CharacterController2D>();
        // Debug.Log(_controller.name);
         _animator = gameObject.GetComponent<AnimationController2D>();
+        eatAcorn = GetComponent<AudioSource>();
 	
 	}
 	
@@ -103,6 +105,7 @@ public class EnemyController : MonoBehaviour {
         }
 		if (col.tag == "acornDrop")
 		{
+            eatAcorn.Play();
 			isDelayed = true;
 			Invoke ("ToggleDelay", enemyDelayTime);
 		}
