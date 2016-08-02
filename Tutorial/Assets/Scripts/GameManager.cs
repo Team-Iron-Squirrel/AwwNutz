@@ -30,9 +30,29 @@ public class GameManager : MonoBehaviour {
 	{
 		Application.LoadLevel (3);
 	}
-	public void ControlsNext()
+	public void Story1Next()
 	{
 		Application.LoadLevel (4);
+	}
+	public void Story2Next()
+	{
+		Application.LoadLevel (5);
+	}
+	public void Story3Next()
+	{
+		Application.LoadLevel (6);
+	}
+	public void Story4Next()
+	{
+		Application.LoadLevel (7);
+	}
+	public void Story5Next()
+	{
+		Application.LoadLevel (1);
+	}
+	public void ControlsNext()
+	{
+		Application.LoadLevel (5);
 	}
 	public void WarningPlay()
 	{
