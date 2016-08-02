@@ -200,7 +200,7 @@ public class PlayerController : MonoBehaviour {
 			//col.transform.parent.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
             col.transform.parent.gameObject.GetComponent<EnemyController>().hero = this.gameObject;
 			col.transform.parent.gameObject.GetComponent<BoxCollider2D>().tag = "Enemy";
-			col.transform.parent.gameObject.GetComponent<EnemyController>().isHostile = true;
+			col.transform.parent.gameObject.GetComponent<EnemyController> ().Invoke ("ToggleHostile", 0.25f);
 			
 			col.transform.parent.gameObject.GetComponent<EnemyController> ().isDelayed = true;
 			col.transform.parent.gameObject.GetComponent<EnemyController> ().Invoke ("ToggleDelay", 0.5F);
